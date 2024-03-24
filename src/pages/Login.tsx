@@ -21,7 +21,7 @@ const Login = () => {
     reset,
   } = useForm();
 
-  const [login, { isLoading, isError }] = useLoginMutation();
+  const [login, { isLoading }] = useLoginMutation();
 
   if (isLoading) {
     return (
@@ -31,34 +31,38 @@ const Login = () => {
     );
   }
 
-  if (isError) {
-    return (
-      <p className="text-4xl text-red-500 font-thin text-center mt-36">
-        Something went wrong can't login. please try again later !!
-      </p>
-    );
-  }
-
   const onSubmit = async (userData: FieldValues) => {
     try {
       await new Promise((resolve) => setTimeout(resolve, 1000));
       const response = await login(userData);
-      console.log(userData);
+      // console.log(userData);
 
       if ("error" in response) {
         toast.error(`Invalid email or password`, {
           duration: 2000,
+          style: {
+            background: "red",
+          },
+          classNames: {
+            title: "text-white text-md",
+          },
         });
       } else {
         toast.success("Login successfully", {
           duration: 2000,
         });
         reset();
-        navigate("/");
+        navigate("/dashboard");
       }
     } catch (error) {
       toast.error("An unexpected error occurred during login", {
         duration: 2000,
+        style: {
+          background: "red",
+        },
+        classNames: {
+          title: "text-white text-md",
+        },
       });
     }
   };
